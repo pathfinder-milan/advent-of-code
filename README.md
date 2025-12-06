@@ -22,6 +22,8 @@ Find them here: `./2025/rust/`
 
 ---
 
+## 🎄 A Small Update: Only 12 Days This Year!
+---
 ## 🎅 A Note From Santa’s Legal Department
 
 To preserve **the true spirit of Santa, Christmas, and the Advent of Code storytelling**,  
@@ -29,7 +31,3 @@ To preserve **the true spirit of Santa, Christmas, and the Advent of Code storyt
 
 You can find your personal inputs waiting for you (like presents under the tree) on the official AoC site.  
 Go log in, stay on the Nice List, and grab your inputs there. 🎁
-
----
-
-## 📁 Repository Structure
