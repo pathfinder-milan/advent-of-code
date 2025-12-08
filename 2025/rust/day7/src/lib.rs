@@ -1,10 +1,11 @@
+pub mod parser;
+
 use std::collections::{HashMap, HashSet, VecDeque};
-use std::fs::File;
-use std::io::{self, BufRead, BufReader};
 
-type Position = (usize, usize);
+pub type Position = (usize, usize);
+pub type Grid = Vec<Vec<char>>;
 
-fn count_hits(grid: &Vec<Vec<char>>, positions: &[Position]) -> usize {
+pub fn how_many_hits(grid: &Grid, positions: &[Position]) -> usize {
     let nrows = grid.len();
     let ncols = grid[0].len();
 
@@ -20,14 +21,14 @@ fn count_hits(grid: &Vec<Vec<char>>, positions: &[Position]) -> usize {
     }
 
     while let Some(current_position) = queue.pop_front() {
-        let (initial_r, c) = current_position;
-        let mut r = initial_r + 1;
+        let (_initial_r, c) = current_position;
+        let mut r = current_position.0 + 1;
 
         while r < nrows {
-            let current_position: Position = (r, c);
+            let current_pos: Position = (r, c);
 
-            if grid[current_position.0][current_position.1] == '^' {
-                if hits.insert(current_position) {
+            if grid[current_pos.0][current_pos.1] == '^' {
+                if hits.insert(current_pos) {
                     count += 1;
                 }
 
@@ -52,7 +53,7 @@ fn count_hits(grid: &Vec<Vec<char>>, positions: &[Position]) -> usize {
     count
 }
 
-fn count_timelines(grid: &Vec<Vec<char>>, positions: &[Position]) -> usize {
+pub fn how_many_timelines(grid: &Grid, positions: &[Position]) -> usize {
     let nrows = grid.len();
     let ncols = grid[0].len();
     let mut memory: HashMap<Position, usize> = HashMap::new();
@@ -65,7 +66,7 @@ fn count_timelines(grid: &Vec<Vec<char>>, positions: &[Position]) -> usize {
 }
 
 fn dfs(
-    grid: &Vec<Vec<char>>,
+    grid: &Grid,
     row: usize,
     col: usize,
     nrows: usize,
@@ -104,40 +105,4 @@ fn dfs(
 
     memory.insert(position, 1);
     1
-}
-
-fn main() -> io::Result<()> {
-    let file = File::open("input.txt")?;
-    let reader = BufReader::new(file);
-
-    let mut grid: Vec<Vec<char>> = Vec::new();
-
-    for line_result in reader.lines() {
-        let line = line_result?.trim().to_string();
-        if line.is_empty() {
-            continue;
-        }
-
-        grid.push(line.chars().collect());
-    }
-
-    let positions: Vec<Position> = grid
-        .iter()
-        .enumerate()
-        .flat_map(|(r, row)| {
-            row.iter()
-                .enumerate()
-                .filter_map(move |(c, &ch)| if ch == 'S' { Some((r, c)) } else { None })
-        })
-        .collect();
-
-    // Part 1
-    let answer1: usize = count_hits(&grid, &positions);
-    println!("Part 1: {}", answer1);
-
-    // Part 2
-    let answer2: usize = count_timelines(&grid, &positions);
-    println!("Part 2: {}", answer2);
-
-    Ok(())
 }
